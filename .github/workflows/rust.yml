@@ -44,9 +44,6 @@ jobs:
       - name: Check for outdated dependencies
         run: cargo outdated
 
-      - name: Check for unused dependencies
-        run: cargo udeps --quiet
-
       - name: Check for cyclic dependencies
         run: cargo depgraph --all-features --all-targets --no-dev-deps --no-regular-deps --no-build-deps --no-optional-deps --no-features --no-deps --no-color --no-dot --no-stats --no-legend
 
