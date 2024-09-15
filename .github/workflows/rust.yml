@@ -2,21 +2,56 @@ name: Rust
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: rustup update stable # Ensure Rust is installed and updated
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Run tests
+        run: cargo test --verbose
+
+      - name: Check for test failures
+        run: |
+          if [ -n "$(cargo test --verbose 2>&1 | grep "thread 'main' panicked")" ]; then
+            echo "Tests failed"
+            exit 1
+          fi
+
+      - name: Check for clippy warnings
+        run: cargo clippy -- -D warnings
+
+      - name: Check for formatting errors
+        run: cargo fmt -- --check
+
+      - name: Check for security vulnerabilities
+        run: cargo audit
+
+      - name: Check for outdated dependencies
+        run: cargo outdated
+
+      - name: Check for unused dependencies
+        run: cargo udeps --quiet
+
+      - name: Check for cyclic dependencies
+        run: cargo depgraph --all-features --all-targets --no-dev-deps --no-regular-deps --no-build-deps --no-optional-deps --no-features --no-deps --no-color --no-dot --no-stats --no-legend
+
+      - name: Check for unused code
+        run: cargo sweep --workspace --duplicates --doc --features --target --all-targets
+
+      - name: Check for code complexity
+        run: cargo xcomplexity --all-targets --all-features --no-dev-deps --no-regular-deps --no-build-deps --no-optional-deps --no-features --no-deps --no-color --no-dot --no-stats --no-legend
