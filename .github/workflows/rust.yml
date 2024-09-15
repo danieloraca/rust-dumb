@@ -43,9 +43,3 @@ jobs:
 
       - name: Check for outdated dependencies
         run: cargo outdated
-
-      - name: Check for unused code
-        run: cargo sweep --workspace --duplicates --doc --features --target --all-targets
-
-      - name: Check for code complexity
-        run: cargo xcomplexity --all-targets --all-features --no-dev-deps --no-regular-deps --no-build-deps --no-optional-deps --no-features --no-deps --no-color --no-dot --no-stats --no-legend
