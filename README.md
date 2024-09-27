@@ -1,3 +1,5 @@
+[![Rust](https://github.com/danieloraca/rust-edge-cases/actions/workflows/rust.yml/badge.svg)](https://github.com/danieloraca/rust-edge-cases/actions/workflows/rust.yml)
+
 # edge cases of rust
 
 casting i32 to usize?
